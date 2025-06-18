@@ -1,0 +1,59 @@
+body {
+    text-align: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+header {
+    font-size: x-large;
+}
+
+.rules {
+    color: red;
+}
+
+.form {
+    display: inline-block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 25px;
+    border-radius: 10px;
+    background-color: #aaaaaa;
+    width: 500px;
+    margin: 0, auto;
+}
+
+input {
+    border-radius: 10px;
+    padding: 10px;
+}
+
+button {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #5b5b5b;
+    color: hsl(0, 0%, 100%);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: hsl(0, 0%, 39%);
+}
+
+button:active {
+    transform: scale(0.95);
+    background-color: hsl(0, 0%, 30%);
+}
+
+.messageArea {
+    width: 500px;
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid black;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    text-align: left;
+}

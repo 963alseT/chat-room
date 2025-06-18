@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Class 9 ChatRoom</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Class 9 ChatRoom</h1>
+    </header>
+    <div class="container">
+        <div class="rules">
+            <h6>Rules: No harassing others, No threats, No cheese</h6>
+            <h6>Any reports of inappropriate behavior will result in a ban</h6>
+            <h6>The creator of this application does not accept liability for any inappropriate behavior</h6>
+        </div>
+        
+        <form class="form" id="form">
+            <input class="input" type="text" placeholder="Name" id="myname" autocomplete="off">
+            <input class="input" type="text" placeholder="Message" id="message" autocomplete="off">
+            <button class="button" type="submit">Send</button>
+            <div class="messageArea" id="messageArea"></div>
+        </form>
+
+        
+        
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+
+        let form = document.getElementById('form');
+        let myname = document.getElementById('myname');
+        let message = document.getElementById('message');
+        let messageArea = document.getElementById('messageArea');
+        
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (message.value) {
+                socket.emit('send name', myname.value);
+                socket.emit('send message', message.value);
+                message.value = '';
+            }
+        });
+
+        socket.on('send name', (username) => {
+            let name = document.createElement('p');
+            name.classList.add('message');
+            name.innerHTML = `<span class="username">${username}:</span>`;
+            messageArea.appendChild(name);
+        });
+
+        socket.on('send message', (chat) => {
+            let chatContent = document.createElement('p');
+            chatContent.classList.add('message');
+            chatContent.textContent = chat;
+            messageArea.appendChild(chatContent);
+        });
+    </script>
+</body>
+
+</html>
