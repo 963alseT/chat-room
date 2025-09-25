@@ -12,8 +12,8 @@ const blocklist = [
 ];
 
 const ipToUsername = {
-    "172.17.0.41": "Moderator",
-    "1": "Admin"
+    // "172.17.0.41": "Moderator",
+    // "1": "Admin"
 };
 
 const adminIps = [
@@ -105,4 +105,5 @@ io.on('connection', (socket) => {
 
 server.listen(5000, () => {
     console.log('listening on *:5000');
+
 });
