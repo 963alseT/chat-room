@@ -6,6 +6,8 @@ module.exports = [
   'fu ck',
   'fuc k',
   'f u c k',
+  'f  u  c  k  ',
+  'f3ck',
   'shit',
   's hit',
   'sh it',
@@ -27,7 +29,6 @@ module.exports = [
   'ni gga',
   'nig ga',
   'nigg a',
-  // Added more terms for broader coverage, including variations
   'asshole',
   'ass hole',
   'a sshole',
@@ -127,6 +128,10 @@ module.exports = [
   'prostitute',
   'pedo',
   'pedophile',
-  'masturbation'
+  'masturbation',
+  '🍆',
+  'feck',
+  'fec3'
 
 ];
+
