@@ -131,7 +131,9 @@ module.exports = [
   'masturbation',
   '🍆',
   'feck',
-  'fec3'
+  'fec3',
+  'ball licker'
 
 ];
+
 
