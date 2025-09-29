@@ -29,6 +29,8 @@ module.exports = [
   'ni gga',
   'nig ga',
   'nigg a',
+  'negro',
+  'negra',
   'asshole',
   'ass hole',
   'a sshole',
@@ -135,5 +137,6 @@ module.exports = [
   'ball licker'
 
 ];
+
 
 
