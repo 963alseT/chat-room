@@ -10,6 +10,8 @@ module.exports = [
   's hit',
   'sh it',
   'shi t',
+  'sh1t',
+  's h i t',
   'cunt',
   'c unt',
   'cu nt',
@@ -89,6 +91,7 @@ module.exports = [
   'w anker',
   'wa nker',
   'wan ker',
+  'wank3r',
   'twat',
   't wat',
   'tw at',
@@ -122,4 +125,8 @@ module.exports = [
   'nate higgers',
   'n!ggers',
   'prostitute',
+  'pedo',
+  'pedophile',
+  'masturbation'
+
 ];
