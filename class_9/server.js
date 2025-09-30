@@ -32,6 +32,17 @@ function isMuted(identifier) {
     return mutedUsers[identifier] && mutedUsers[identifier] > Date.now();
 }
 
+function getClientIp(socket) {
+    // Try x-forwarded-for (may be a list)
+    const forwarded = socket.handshake.headers['x-forwarded-for'];
+    if (forwarded) {
+        // x-forwarded-for may be "client, proxy1, proxy2"
+        return forwarded.split(',')[0].trim();
+    }
+    // Fallback: connection remote address
+    return socket.request.connection.remoteAddress;
+}
+
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
@@ -41,12 +52,12 @@ app.get('/', (req, res) => {
 const usernameToIp = {};
 
 io.on('connection', (socket) => {
-    const userIp = socket.request.connection.remoteAddress.replace(/^.*:/, '');
+    const userIp = getClientIp(socket);
     let username = ipToUsername[userIp] || null;
     console.log({userIp})
 
     socket.on('send name', (requestedName) => {
-        if (isMuted(username) || (username && isMuted(username))) {
+        if (isMuted(userIp) || (username && isMuted(username))) {
         socket.emit('send name', 'You are on a timeout and cannot change your username right now.');
         return;
     }
@@ -95,7 +106,7 @@ io.on('connection', (socket) => {
             socket.emit('send message', 'Message contains profanity and has been blocked.');
             return;
         }
-        if (isMuted(username) || (username && isMuted(username))) {
+        if (isMuted(userIp) || (username && isMuted(username))) {
             socket.emit('send message', 'You are on a timeout and cannot send messages right now.');
             return;
         }
@@ -105,6 +116,4 @@ io.on('connection', (socket) => {
 
 server.listen(5000, () => {
     console.log('listening on *:5000');
-
 });
-
