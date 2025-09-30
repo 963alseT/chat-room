@@ -8,6 +8,9 @@ module.exports = [
   'f u c k',
   'f  u  c  k  ',
   'f3ck',
+  'f 3ck',
+  'f3 ck',
+  'f3c k',
   'shit',
   's hit',
   'sh it',
@@ -229,4 +232,5 @@ module.exports = [
   'fec 3',
   'ball licker',
 ];
+
 
