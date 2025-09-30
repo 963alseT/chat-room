@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
     console.log({userIp})
 
     socket.on('send name', (requestedName) => {
-        if (isMuted(userIp) || (username && isMuted(username))) {
+        if (isMuted(username) || (username && isMuted(username))) {
         socket.emit('send name', 'You are on a timeout and cannot change your username right now.');
         return;
     }
@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
             socket.emit('send message', 'Message contains profanity and has been blocked.');
             return;
         }
-        if (isMuted(userIp) || (username && isMuted(username))) {
+        if (isMuted(username) || (username && isMuted(username))) {
             socket.emit('send message', 'You are on a timeout and cannot send messages right now.');
             return;
         }
@@ -107,3 +107,4 @@ server.listen(5000, () => {
     console.log('listening on *:5000');
 
 });
+
