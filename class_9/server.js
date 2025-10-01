@@ -1,27 +1,34 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const cookieParser = require('cookie-parser');
+const { v4: uuidv4 } = require('uuid');
 const customBadWords = require('./badwords.js'); // filepath: c:\Users\fionn\Desktop\truth\chat_room\class_9\server.js
 
 const app = express();
-const server = http.createServer(app)
+const server = http.createServer(app);
 const io = socketIo(server);
 
-const blocklist = [
-    '',
-];
+app.use(cookieParser());
+app.use(express.static('public'));
 
-const ipToUsername = {
-    // "172.17.0.41": "Moderator",
-    // "1": "Admin"
-};
+app.get('/', (req, res) => {
+    let userId = req.cookies.userId;
+    if (!userId) {
+        userId = uuidv4();
+        res.cookie('userId', userId, { maxAge: 10 * 365 * 24 * 60 * 60 * 1000 }); // 10 years
+    }
+    res.sendFile(__dirname + '/index.html');
+});
 
-const adminIps = [
-    "172.17.0.41", // Add your admin IPs here
-    "1"
+// Add your admin UUIDs here
+const adminUserIds = [
+    // Example: 'c2f8e4a3-6b3b-4f2e-bb7e-2f1e9d8c7f6a'
 ];
 
 const mutedUsers = {};
+const usernameToId = {};
+const idToUsername = {};
 
 function muteUser(identifier, durationSeconds) {
     const muteUntil = Date.now() + durationSeconds * 1000;
@@ -32,37 +39,30 @@ function isMuted(identifier) {
     return mutedUsers[identifier] && mutedUsers[identifier] > Date.now();
 }
 
-function getClientIp(socket) {
-    // Try x-forwarded-for (may be a list)
-    const forwarded = socket.handshake.headers['x-forwarded-for'];
-    if (forwarded) {
-        // x-forwarded-for may be "client, proxy1, proxy2"
-        return forwarded.split(',')[0].trim();
-    }
-    // Fallback: connection remote address
-    return socket.request.connection.remoteAddress;
-}
-
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
-
-const usernameToIp = {};
-
 io.on('connection', (socket) => {
-    const userIp = getClientIp(socket);
-    let username = ipToUsername[userIp] || null;
-    console.log({userIp})
+    // Parse cookie from socket handshake
+    let userId = null;
+    const cookies = socket.handshake.headers.cookie;
+    if (cookies) {
+        const match = cookies.match(/userId=([a-zA-Z0-9\-]+)/);
+        if (match) {
+            userId = match[1];
+        }
+    }
+    if (!userId) {
+        // Should not happen, but fallback: generate temporary UUID (not persistent)
+        userId = uuidv4();
+    }
+    let username = idToUsername[userId] || null;
+    console.log({ userId });
 
     socket.on('send name', (requestedName) => {
-        if (isMuted(userIp) || (username && isMuted(username))) {
-        socket.emit('send name', 'You are on a timeout and cannot change your username right now.');
-        return;
-    }
-        if (ipToUsername[userIp]) {
-            username = ipToUsername[userIp];
+        if (isMuted(userId) || (username && isMuted(username))) {
+            socket.emit('send name', 'You are on a timeout and cannot change your username right now.');
+            return;
+        }
+        if (idToUsername[userId]) {
+            username = idToUsername[userId];
         } else {
             const containsBadWord = customBadWords.some(word =>
                 requestedName.toLowerCase().includes(word)
@@ -73,31 +73,32 @@ io.on('connection', (socket) => {
             }
             username = requestedName;
         }
-        usernameToIp[username] = userIp; // Save mapping
+        usernameToId[username] = userId; // Save mapping
+        idToUsername[userId] = username;
         io.emit('send name', username);
     });
 
     socket.on('send message', (message) => {
-    // Mute command: /mute username seconds
-    if (message.startsWith('/mute ')) {
-        if (!adminIps.includes(userIp)) {
-            socket.emit('send message', 'You do not have permission to use this command.');
-            return;
-        }
-        const parts = message.split(' ');
-        if (parts.length === 3) {
-            const targetUsername = parts[1];
-            const seconds = parseInt(parts[2]);
-            const targetIp = usernameToIp[targetUsername];
-            if (targetIp && !isNaN(seconds)) {
-                muteUser(targetIp, seconds);
-                socket.emit('send message', `Muted ${targetUsername} for ${seconds} seconds.`);
-            } else {
-                socket.emit('send message', 'Mute command failed: user not found or invalid time.');
+        // Mute command: /mute username seconds
+        if (message.startsWith('/mute ')) {
+            if (!adminUserIds.includes(userId)) {
+                socket.emit('send message', 'You do not have permission to use this command.');
+                return;
             }
-            return;
+            const parts = message.split(' ');
+            if (parts.length === 3) {
+                const targetUsername = parts[1];
+                const seconds = parseInt(parts[2]);
+                const targetId = usernameToId[targetUsername];
+                if (targetId && !isNaN(seconds)) {
+                    muteUser(targetId, seconds);
+                    socket.emit('send message', `Muted ${targetUsername} for ${seconds} seconds.`);
+                } else {
+                    socket.emit('send message', 'Mute command failed: user not found or invalid time.');
+                }
+                return;
+            }
         }
-    }
 
         const containsBadWord = customBadWords.some(word =>
             message.toLowerCase().includes(word)
@@ -106,7 +107,7 @@ io.on('connection', (socket) => {
             socket.emit('send message', 'Message contains profanity and has been blocked.');
             return;
         }
-        if (isMuted(userIp) || (username && isMuted(username))) {
+        if (isMuted(userId) || (username && isMuted(username))) {
             socket.emit('send message', 'You are on a timeout and cannot send messages right now.');
             return;
         }
