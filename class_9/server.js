@@ -23,7 +23,8 @@ app.get('/', (req, res) => {
 
 // Add your admin UUIDs here
 const adminUserIds = [
-    // Example: 'c2f8e4a3-6b3b-4f2e-bb7e-2f1e9d8c7f6a'
+    e3a245a8-2c8d-41d6-9a9d-c623f9a23f0b
+    cc971d3a-a244-4475-af28-78da051daa38
 ];
 
 const mutedUsers = {};
@@ -118,4 +119,5 @@ io.on('connection', (socket) => {
 server.listen(5000, () => {
     console.log('listening on *:5000');
 });
+
 
