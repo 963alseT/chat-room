@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 app.use(cookieParser());
-app.use(express.static('public'));
+app.use(express.static('/'));
 
 app.get('/', (req, res) => {
     let userId = req.cookies.userId;
@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
         userId = uuidv4();
         res.cookie('userId', userId, { maxAge: 10 * 365 * 24 * 60 * 60 * 1000 }); // 10 years
     }
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 // Add your admin UUIDs here
@@ -118,3 +118,4 @@ io.on('connection', (socket) => {
 server.listen(5000, () => {
     console.log('listening on *:5000');
 });
+
