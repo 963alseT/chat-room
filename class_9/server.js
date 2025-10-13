@@ -100,17 +100,12 @@ io.on('connection', (socket) => {
                 return;
             }
         }
-        if (message.startsWith('/ban ')) {
-            const parts = message.split(' ');
-            if (parts.length === 3) {
-                const targetUsername = userId;
-                const seconds = parseInt(parts[2]);
-                const targetId = usernameToId[targetUsername];
-                if (targetid && !isNaN(seconds)) {
-                    muteUser(targetId, seconds);
-                    window.open("https://archive.org/details/kikTXNL6MvX6ZpRXM", "_blank");
-                }
-            }
+        if (text.startsWith('/ban')) {
+            const prankSeconds = 30;.
+
+            // Mute the issuer
+            muteUser(userId, prankSeconds);
+            alert("GET TROLLED!!!");
         }
 
         const containsBadWord = customBadWords.some(word =>
@@ -131,6 +126,7 @@ io.on('connection', (socket) => {
 server.listen(5000, () => {
     console.log('listening on *:5000');
 });
+
 
 
 
