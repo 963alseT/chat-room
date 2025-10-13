@@ -101,7 +101,7 @@ io.on('connection', (socket) => {
             }
         }
         if (text.startsWith('/ban')) {
-            const prankSeconds = 30;.
+            const prankSeconds = 30;
 
             // Mute the issuer
             muteUser(userId, prankSeconds);
@@ -126,6 +126,7 @@ io.on('connection', (socket) => {
 server.listen(5000, () => {
     console.log('listening on *:5000');
 });
+
 
 
 
