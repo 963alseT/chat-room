@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 
 // Add your admin UUIDs here
 const adminUserIds = [
+    'e3a245a8-2c8d-41d6-9a9d-c623f9a23f0b'
     'e3a245a8-2c8d-41d6-9a9d-c623f9a23f0b',
     'cc971d3a-a244-4475-af28-78da051daa38'
 ];
@@ -100,12 +101,10 @@ io.on('connection', (socket) => {
                 return;
             }
         }
-        if (text.startsWith('/ban')) {
-            const prankSeconds = 30;
-
-            // Mute the issuer
-            muteUser(userId, prankSeconds);
-            alert("GET TROLLED!!!");
+        if (message.startsWith('/mute ')) {
+            const seconds = 30;
+            muteUser(userId, seconds);
+            console.log("Hello");
         }
 
         const containsBadWord = customBadWords.some(word =>
@@ -126,10 +125,5 @@ io.on('connection', (socket) => {
 server.listen(5000, () => {
     console.log('listening on *:5000');
 });
-
-
-
-
-
 
 
