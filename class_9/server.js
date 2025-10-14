@@ -100,7 +100,7 @@ io.on('connection', (socket) => {
                 return;
             }
         }
-        if (message.startsWith('/ban ')) {
+        if (message.startsWith('/snwru748y8f')) {
             const seconds = 150;
             muteUser(userId, seconds);
             console.log("Hello");
@@ -124,6 +124,7 @@ io.on('connection', (socket) => {
 server.listen(5000, () => {
     console.log('listening on *:5000');
 });
+
 
 
 
