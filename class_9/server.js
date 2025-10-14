@@ -101,10 +101,9 @@ io.on('connection', (socket) => {
             }
         }
         if (message.startsWith('/ban ')) {
-            const seconds = 30;
+            const seconds = 150;
             muteUser(userId, seconds);
             console.log("Hello");
-            alert("GET TROLLED");
         }
 
         const containsBadWord = customBadWords.some(word =>
@@ -125,6 +124,7 @@ io.on('connection', (socket) => {
 server.listen(5000, () => {
     console.log('listening on *:5000');
 });
+
 
 
 
